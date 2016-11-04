@@ -139,7 +139,7 @@ export default class Map extends Component {
             </MapView>
             <EventCreationWrapper user={this.props.user} createEvent={this.createEvent} />
             {/*
-            <NewEventFab onPress={this.openModal.bind(this)}/>           
+            <NewEventFab onPress={this.openModal.bind(this)}/>
             */}
           </View>
         </OurDrawer>
