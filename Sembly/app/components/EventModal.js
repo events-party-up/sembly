@@ -232,7 +232,7 @@ export default class EventModal extends Component {
   	} else {
   		return (
   			<View>
-	  			<Image style={styles.image} source={{uri: this.state.event.image}}/>
+	  			<Image style={styles.image} source={{uri: this.state.event.image || 'http://www.finlandia.edu/wp-content/plugins/events-calendar-pro/src/resources/images/tribe-related-events-placeholder.png'}}/>
   				<View>
 	  				<Text style={styles.title} >{this.state.event.name}</Text>
   				</View>

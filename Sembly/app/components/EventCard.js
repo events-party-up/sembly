@@ -61,7 +61,7 @@ export default class EventCard extends Component {
           borderBottomColor: 'grey',
           borderBottomWidth: 1
         }}>
-          <Image style={styles.image} source={{uri: this.props.event.image}}/>
+          <Image style={styles.image} source={{uri: this.props.event.image || 'http://www.finlandia.edu/wp-content/plugins/events-calendar-pro/src/resources/images/tribe-related-events-placeholder.png'}}/>
           <View style={styles.text}>
             <Text style={styles.title}>{this.props.event.name}</Text>
             <Text style={styles.instructions}>{time.toString()}</Text>
