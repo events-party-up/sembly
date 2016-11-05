@@ -66,6 +66,7 @@ export default class Feed extends Component {
     });
   }
   getBundle() {
+    console.log('GET BUNDLE USER: ', this.props.user)
     fetch('http://localhost:3000/api/events/bundle', {
       method: 'POST',
       headers: { 'Content-Type' : 'application/json' },

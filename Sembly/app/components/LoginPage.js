@@ -60,7 +60,11 @@ export default class LoginPage extends Component {
       body: JSON.stringify(facebookUserData),
     })
     .then(response => response.json())
-    .then(user => setUser(user))
+    .then((user) => {
+      setUser(user);
+      return user;
+    })
+    .then(user => this.props.setUser(user))
     .then(() => this.navigate())
     .catch((error) => {
       console.log('Login Error; make sure you npm start the backend server in the root folder, also server might be responding with a 404. ', error.message);

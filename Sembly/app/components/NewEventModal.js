@@ -305,7 +305,7 @@ NewEventModal.defaultProps = {
 };
 
 NewEventModal.propTypes = {
-  createEvent: React.PropTypes.func.isRequired,
+  // createEvent: React.PropTypes.func.isRequired,
   modalIsClosing: React.PropTypes.func,
   eventCreatedHandler: React.PropTypes.func,
 };
