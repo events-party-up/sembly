@@ -9,7 +9,9 @@ import {
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { FBLogin } from 'react-native-facebook-login';
-import { getUser } from '../controllers/userStorageController';
+import { getUser, destroyUser } from '../controllers/userStorageController';
+
+/* eslint-disable no-underscore-dangle */
 
 const styles = StyleSheet.create({
   outer: {
@@ -77,6 +79,7 @@ export default class Menu extends Component {
         photoUrl: 'http://www.pd4pic.com/images/plain-dull-blank-smiley-yellow-face-icon.png',
       },
     };
+    this.logout = this.logout.bind(this);
   }
 
   componentWillMount() {
@@ -89,6 +92,13 @@ export default class Menu extends Component {
       console.log('Menu.js user: ', user);
       this.setState({ user });
     });
+  }
+
+  logout() {
+    destroyUser()
+      .then(() => {
+        this.props._navigate('LoginPage');
+      });
   }
 
   render() {
@@ -134,7 +144,7 @@ export default class Menu extends Component {
             </View>
           </TouchableOpacity>
           <View style={styles.fbcontainer}>
-            <FBLogin />
+            <FBLogin onLogout={this.logout} />
           </View>
         </View>
       </View>

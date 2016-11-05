@@ -1,4 +1,4 @@
-export default function _navigate(name){
+export default function _navigate(name) {
     if(name === 'Profile'){
       this.props.navigator.resetTo({
         name: 'Profile'
@@ -24,4 +24,9 @@ export default function _navigate(name){
         name: 'Saved'
       });
     }
-};
+    if (name === 'LoginPage') {
+      this.props.navigator.resetTo({
+        name: 'LoginPage',
+      });
+    }
+}
