@@ -2,13 +2,8 @@ var chai = require('chai');
 var expect = chai.expect;
 var userModels = require('../server/models/userModels');
 var User = require('../server/schemas/userSchema');
+const testUser = require('./testHelpers').generateTestUsers(1)[0];
 
-var testUser = {
-  firstName: 'Test',
-  lastName: 'User',
-  email: 'test@test.com',
-  password: 'password'
-}
 
 describe('User Models', function() {
   before(function(done){
@@ -22,10 +17,10 @@ describe('User Models', function() {
     it('should add a new user to the database', function(done) {
       userModels.addUser(testUser)
       .then(function() {
-        return User.findOne({'email': 'test@test.com'}).exec()
+        return User.findOne({'email': testUser.email}).exec()
       })
       .then(function(user) {
-        expect(user.email).to.equal('test@test.com');
+        expect(user.email).to.equal(testUser.email);
         done();
       });
     });
@@ -66,14 +61,14 @@ describe('User Models', function() {
     it('should return users based on email', function(done) {
       userModels.userSearch('test')
       .then(function(users) {
-        expect(users[0].email).to.equal('test@test.com');
+        expect(users[0].email).to.equal(testUser.email);
         done();
       });
     });
     it('should return users based on name', function(done) {
       userModels.userSearch('User')
       .then(function(users) {
-        expect(users[0].email).to.equal('test@test.com');
+        expect(users[0].email).to.equal(testUser.email);
         done();
       });
     });

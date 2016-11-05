@@ -10,13 +10,11 @@ import {
 
 import Drawer from 'react-native-drawer';
 
-import TopBar from './TopBar.js';
-import OurDrawer from './OurDrawer.js';
-import Menu from './Menu.js';
+import TopBar from './TopBar';
+import OurDrawer from './OurDrawer';
+import Menu from './Menu';
 
-import _navigate from './navigateConfig.js';
-
-
+import _navigate from './navigateConfig';
 
 export default class Main extends Component {
   constructor(props){

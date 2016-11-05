@@ -12,12 +12,12 @@ import {
   View
 } from 'react-native';
 
-import App from './app/components/App.js';
+import App from './app/components/App';
 
 export default class Sembly extends Component {
   render() {
     return (
-        <App />
+      <App />
     );
   }
 }

@@ -11,8 +11,8 @@ import {
   ScrollView
 } from 'react-native';
 
-import Spinner from './Spinner.js';
-import UserCard from './UserCard.js';
+import Spinner from './Spinner';
+import UserCard from './UserCard';
 import Modal from 'react-native-modalbox';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 

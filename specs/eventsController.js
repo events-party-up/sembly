@@ -10,6 +10,7 @@ var eventModels = require('../server/models/eventModels');
 var User = require('../server/schemas/userSchema');
 var Event = require('../server/schemas/eventsSchema');
 var app = require('../server/server');
+const testUser = require('./testHelpers').generateTestUsers(1)[0];
 
 //Event Controller will break if event models are broken
 
@@ -19,12 +20,6 @@ var testEvent = {
   tags:['fun', 'sports'],
 }
 
-var testUser = {
-  firstName: 'Test',
-  lastName: 'User',
-  email: 'test@test.com',
-  password: 'password'
-}
 var userId;
 var eventId;
 
@@ -282,5 +277,5 @@ describe('Events Controller', function() {
           .end(done);
     });
   });
-  
+
 });

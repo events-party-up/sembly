@@ -4,8 +4,10 @@ import android.app.Application;
 import android.util.Log;
 
 import com.facebook.react.ReactApplication;
-import com.oblador.vectoricons.VectorIconsPackage;
+import com.horcrux.svg.RNSvgPackage;
+import com.magus.fblogin.FacebookLoginPackage;
 import com.airbnb.android.react.maps.MapsPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
@@ -27,8 +29,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new VectorIconsPackage(),
+            new RNSvgPackage(),
+            new FacebookLoginPackage(),
             new MapsPackage(),
+            new VectorIconsPackage(),
             new ReactMaterialKitPackage()
       );
     }

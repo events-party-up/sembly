@@ -7,112 +7,203 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
-  DatePickerIOS
+  DatePickerIOS,
 } from 'react-native';
 
 import Modal from 'react-native-modalbox';
-import { MKCheckbox, MKButton } from 'react-native-material-kit'
+import { MKCheckbox, MKButton } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+/* eslint-disable react/jsx-filename-extension */
+
+const styles = StyleSheet.create({
+  modal: {
+    marginTop: 40,
+  },
+  errorText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'red',
+    paddingLeft: 10,
+  },
+  closeButtonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  closeButton: {
+    color: 'grey',
+    fontSize: 30,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  textInputContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F44336',
+  },
+  textInput: {
+    // flex: 1,
+    height: 36,
+    padding: 4,
+    marginRight: 5,
+    flex: 4,
+    fontSize: 18,
+    // borderWidth: 1,
+    // borderColor: 'grey',
+    textAlign: 'left',
+  },
+  friendsCheckGroup: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 5,
+    alignItems: 'center',
+  },
+  friendCheck: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  visibilityCheck: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  createEventButtonContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  createEventButton: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    backgroundColor: '#F44336',
+    width: 150,
+    height: 40,
+  },
+});
+
 export default class NewEventModal extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       friends: [],
       newEventName: '',
       newEventStartTime: new Date(),
       newEventTags: '',
-      errorText: ''
-    }
+      errorText: '',
+    };
   }
 
-  componentWillMount () {
-    fetch('http://localhost:3000/api/friends/getFriends',{
-      method: 'POST',
-      headers: { "Content-Type" : "application/json" },
-      body: JSON.stringify({userId: this.props.userId, search: ''})
-    })
-    .then(response => {
-      return response.json();
-    })
-    .then( friends => {
+  componentWillMount() {
+    this.setFriends();
+  }
+
+  setFriends() {
+    fetch('http://localhost:3000/api/friends/getFriends',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: this.props.userId, search: '' }),
+      }
+    )
+    .then(response => response.json())
+    .then(friends =>
       this.setState({
-        friends: friends
-      });
-    })
-    .catch( error => {
-      console.log(error);
-    });
+        friends,
+      })
+    );
   }
-  handleSubmit () {
 
-    let context = this;
-    if(this.state.newEventName === ''){
-      this.setState({errorText: 'Please enter an event name!'})
+  handleSubmit() {
+    // let context = this;
+    if (this.state.newEventName === '') {
+      this.setState({ errorText: 'Please enter an event name!' });
       return;
     }
 
-    let eventToBePosted = {
+    const eventToBePosted = {
       name: this.state.newEventName,
-      location: [],
       startTime: this.state.newEventStartTime,
-      image: 'http://blogs-images.forbes.com/steveolenski/files/2015/07/Messe_Luzern_Corporate_Event.jpg',
-      tags: [],
+      image: null, // can add a URL here to go with the event
+      tags: this.state.newEventTags.split(' '),
       invitedUsers: [],
-      visibility: ''
-    }
-
-    eventToBePosted.location[0] = this.props.eventCoords.longitude;
-    eventToBePosted.location[1] = this.props.eventCoords.latitude;
-
-    if(this.refs.visibilityCheckbox.state.checked) {
-      eventToBePosted.visibility = 'invite'
-    } else {
-      eventToBePosted.visibility = 'public'
-    }
-
-    eventToBePosted.tags = this.state.newEventTags.split(' ');
+      visibility: this.refs.visibilityCheckbox.state.checked ? 'invite' : 'public',
+    };
 
     this.state.friends.forEach((friend, index) => {
-      if(this.refs['friend' + index].state.checked){
-        eventToBePosted.invitedUsers.push(this.refs['friend' + index].props.friendCheckId)
+      if (this.refs['friend' + index].state.checked) {
+        eventToBePosted.invitedUsers.push(this.refs['friend' + index].props.friendCheckId);
       }
-    })
+    });
 
-    fetch('http://localhost:3000/api/events',{
-      method: 'POST',
-      headers: { "Content-Type" : "application/json" },
-      body: JSON.stringify(eventToBePosted)
-    })
-    .then(response => {
+    // TODO: swap the create button for a spinner
+
+    this.props.createEvent(eventToBePosted)
+    .then(() => {
+      // TODO: hide the spinner
       this.setState({
-        errorText: 'Event created succesfully!',
+        errorText: 'Event created successfully!',
         newEventName: '',
         newEventStartTime: new Date(),
         newEventTags: '',
-      })
+      });
       setTimeout(() => {
-        context.refs.newEventModal.close()
-        context.setState({
-          errorText: ''
-        })
+        this.refs.newEventModal.close();
+        this.setState({
+          errorText: '',
+        });
       }, 1000);
-      this.props.resetPin();
-      this.props.fetchNewEvents();
     })
-    .catch( error => {
-      console.log(error);
+    .catch(() => {
+      this.setState({
+        errorText: 'There was an error creating your event.',
+        newEventName: '',
+        newEventStartTime: new Date(),
+        newEventTags: '',
+      });
+      setTimeout(() => {
+        this.refs.newEventModal.close();
+        this.setState({
+          errorText: '',
+        });
+      }, 1000);
     });
   }
-  render () {
-    let context = this;
+
+  open() {
+    this.refs.newEventModal.open();
+  }
+
+  close() {
+    this.refs.newEventModal.close();
+  }
+
+  render() {
+    const context = this;
     return (
-      <Modal ref={'newEventModal'} style={styles.modal} isOpen={this.props.modalVisibility}>
+      <Modal ref={'newEventModal'} style={styles.modal}>
         <View>
           <View style={styles.closeButtonContainer}>
             <Text style={styles.errorText}>{this.state.errorText}</Text>
             <TouchableOpacity onPress={() => context.refs.newEventModal.close()}>
-              <Icon style={styles.closeButton} name='close'/>
+              <Icon style={styles.closeButton} name="close" />
             </TouchableOpacity>
           </View>
 
@@ -172,98 +263,23 @@ export default class NewEventModal extends Component {
               onPress={this.handleSubmit.bind(this)}
               >
               <Text pointerEvents="none"
-                    style={{color: 'white', fontWeight: 'bold',}}>
+                    style={{ color: 'white', fontWeight: 'bold' }}>
                 CREATE EVENT
               </Text>
             </MKButton>
           </View>
-
         </View>
       </Modal>
-    )
+    );
   }
 }
 
+NewEventModal.defaultProps = {
+  modalVisibility: false,
+};
 
-const styles = StyleSheet.create({
-  modal: {
-    marginTop: 40
-  },
-  errorText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'red',
-    paddingLeft: 10
-  },
-  closeButtonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  closeButton:{
-    color: 'grey',
-    fontSize: 30
-  },
-  headerContainer:{
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold'
-  },
-  textInputContainer: {
-    justifyContent:'center',
-    alignItems:'center',
-    margin: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F44336'
-  },
-  textInput: {
-    flex:1,
-    height: 36,
-    padding: 4,
-    marginRight: 5,
-    flex: 4,
-    fontSize: 18,
-    // borderWidth: 1,
-    // borderColor: 'grey',
-    textAlign: 'left'
-  },
-  friendsCheckGroup: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 5,
-    alignItems: 'center',
-  },
-  friendCheck: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'flex-start'
-  },
-  visibilityCheck:{
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 5,
-    paddingBottom: 5,
-    alignItems: 'center',
-    flexDirection:'row',
-    justifyContent: 'flex-start'
-  },
-  createEventButtonContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center'
-  },
-  createEventButton: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    backgroundColor: '#F44336',
-    width: 150,
-    height: 40,
-  }
-})
+NewEventModal.propTypes = {
+  modalVisibility: React.PropTypes.bool,
+  createEvent: React.PropTypes.func.isRequired,
+};
+

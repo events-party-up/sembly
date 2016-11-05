@@ -86,6 +86,10 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
 
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
     defaultConfig {
         applicationId "com.sembly"
         minSdkVersion 16
@@ -95,6 +99,7 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        multiDexEnabled true
     }
     splits {
         abi {
@@ -108,6 +113,9 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+        debug {
+            debuggable true
         }
     }
     // applicationVariants are e.g. debug, release
@@ -126,9 +134,17 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-vector-icons')
+    compile project(':react-native-svg')
+    compile project(':react-native-facebook-login')
     compile project(':react-native-maps')
+    //compile 'com.google.android.gms:play-services-maps:9.4.0'
+    compile project(':react-native-fbsdk')
+    compile 'com.google.android.gms:play-services-maps:9.4.0'
+    compile 'com.google.android.gms:play-services-location:9.4.0'
+
+    compile project(':react-native-vector-icons')
     compile project(':react-native-material-kit')
+
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
@@ -140,3 +156,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
   from configurations.compile
   into 'libs'
 }
+

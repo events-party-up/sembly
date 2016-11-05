@@ -9,19 +9,19 @@ import {
   ScrollView
 } from 'react-native';
 
-import Spinner from './Spinner.js'
+import Spinner from './Spinner';
 
 import Drawer from 'react-native-drawer';
 import NewEventModal from './NewEventModal.js';
 import EventModal from './EventModal.js';
 import NewEventFab from './NewEventFab.js';
 
-import TopBar from './TopBar.js';
-import OurDrawer from './OurDrawer.js';
-import Menu from './Menu.js';
+import TopBar from './TopBar';
+import OurDrawer from './OurDrawer';
+import Menu from './Menu';
 import EventCard from './EventCard';
 
-import _navigate from './navigateConfig.js';
+import _navigate from './navigateConfig';
 
 
 export default class Feed extends Component {

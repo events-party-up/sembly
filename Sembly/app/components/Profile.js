@@ -13,14 +13,14 @@ import {
 
 import Drawer from 'react-native-drawer';
 
-import Spinner from './Spinner.js'
+import Spinner from './Spinner'
 
-import TopBar from './TopBar.js';
-import OurDrawer from './OurDrawer.js';
-import Menu from './Menu.js';
-import UserCard from './UserCard.js';
+import TopBar from './TopBar';
+import OurDrawer from './OurDrawer';
+import Menu from './Menu';
+import UserCard from './UserCard';
 
-import _navigate from './navigateConfig.js';
+import _navigate from './navigateConfig';
 
 var styles = StyleSheet.create({
   description: {

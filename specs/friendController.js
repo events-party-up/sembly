@@ -8,29 +8,10 @@ var friendController = require('../server/controllers/friendController');
 var friendModels = require('../server/models/friendModels');
 var User = require('../server/schemas/userSchema');
 var app = require('../server/server');
+const testUsers = require('./testHelpers').generateTestUsers(3);
 
-var testUser = {
-  firstName: 'Test',
-  lastName: 'User',
-  email: 'test@test.com',
-  password: 'password'
-}
 var testId;
-
-var friend = {
-  firstName: 'friend',
-  lastName: 'popasquatch',
-  email: 'friend@test.com',
-  password: 'password'
-}
 var friendId;
-
-var loser = {
-  firstName: 'yo',
-  lastName: 'User',
-  email: 'loser@test.com',
-  password: 'password'
-}
 var loserId;
 
 describe('Friend Controller', function() {
@@ -38,7 +19,7 @@ describe('Friend Controller', function() {
     this.timeout(4000);
     User.remove({}).exec()
     .then(function(){
-      var users = [new User(testUser), new User(friend), new User(loser)];
+      var users = [new User(testUsers[0]), new User(testUsers[1]), new User(testUsers[2])];
       return User.create(users);
     })
     .then(function(users){
@@ -142,9 +123,10 @@ describe('Friend Controller', function() {
       friendModels.getFriends.restore();
     })
     it('should with friends with a success', function(done) {
+      const firstName = testUsers[1].name.split(' ')[0].toLowerCase();
       request(app)
           .post('/api/friends/getFriends')
-          .send({userId: testId, search: 'friend'})
+          .send({userId: testId, search: firstName})
           .expect(200)
           .expect(function(res){
           	expect(res.body.length).to.equal(1);
