@@ -11,6 +11,7 @@ module.exports = function (app, express) {
   app.get('/api/users/:search', userController.getUsers);
 
   //Handle Friend actions
+  app.post('/api/friends/friendInfo', friendController.getFriendInfo);
   app.post('/api/friends/getFriends', friendController.getFriends);
   app.post('/api/friends/getRequests', friendController.getRequests);
   app.post('/api/friends/friendRequest', friendController.friendRequest);
