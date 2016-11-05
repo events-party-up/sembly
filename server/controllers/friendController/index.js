@@ -4,5 +4,6 @@ module.exports = {
 	getFriends: require('./getFriends'),
 	rejectRequest: require('./rejectRequest'),
 	removeFriend: require('./removeFriend'),
-	getRequests: require('./getRequests')
+	getRequests: require('./getRequests'),
+  getFriendInfo: require('./getFriendInfo'),
 }
