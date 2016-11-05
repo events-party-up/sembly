@@ -1,9 +1,8 @@
-// addUser
+const User = require('../../schemas/userSchema');
 
-var User = require('../../schemas/userSchema')
-
-//Add a new user to the database
+// Add a new user to the database
 module.exports = (user) => {
-	var newUser = new User(user);
-	return newUser.save();
-}
+  return User.create(user);
+  //const newUser = new User(user);
+  //return newUser.save();
+};

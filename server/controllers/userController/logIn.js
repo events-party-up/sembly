@@ -1,15 +1,11 @@
 const userModels = require('../../models/userModels');
 
 module.exports = (req, res) => {
-  console.log('hello!');
-  //const email = req.body.email;
-  //const password = req.body.password;
-  const email = 'spencer@test.com';
-  const password = 'test';
-  userModels.logIn(email, password)
-    .then((response) => {
-      console.log('yay!');
-      res.status(200).json(response);
+  userModels.logIn(req.body)
+    .then((user) => {
+      res
+        .status(200)
+        .json(user);
     })
     .catch((error) => {
       console.log('oh no, error in login method!!');
