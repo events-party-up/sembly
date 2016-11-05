@@ -1,8 +1,7 @@
 // getSaved.js
-var User = require('../../schemas/userSchema');
+const User = require('../../schemas/userSchema');
 
-module.exports = (userId) => {
-	return User.findOne({'_id': userId})
-	.populate('saved')
-	.exec();
-}
+module.exports = facebookId =>
+  User.findOne({ facebookId })
+    .populate('saved')
+    .exec();
