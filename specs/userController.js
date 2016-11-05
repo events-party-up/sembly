@@ -6,13 +6,8 @@ var userController = require('../server/controllers/userController');
 var userModels = require('../server/models/userModels');
 var User = require('../server/schemas/userSchema');
 var app = require('../server/server');
+const testUser = require('./testHelpers').generateTestUsers(1)[0];
 
-var testUser = {
-  firstName: 'Test',
-  lastName: 'User',
-  email: 'test@test.com',
-  password: 'password'
-}
 
 describe('User Controller', function() {
   describe('signUp', function() {

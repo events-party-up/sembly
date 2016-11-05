@@ -3,29 +3,11 @@ var chai = require('chai');
 var expect = chai.expect;
 var friendModels = require('../server/models/friendModels');
 var User = require('../server/schemas/userSchema');
+const testUser = require('./testHelpers').generateTestUsers(1)[0];
+const testUsers = require('./testHelpers').generateTestUsers(3);
 
-var testUser = {
-  firstName: 'Test',
-  lastName: 'User',
-  email: 'test@test.com',
-  password: 'password'
-}
 var testId;
-
-var friend = {
-  firstName: 'friend',
-  lastName: 'popasquatch',
-  email: 'friend@test.com',
-  password: 'password'
-}
 var friendId;
-
-var loser = {
-  firstName: 'yo',
-  lastName: 'User',
-  email: 'loser@test.com',
-  password: 'password'
-}
 var loserId;
 
 describe('Friend Models', function() {
@@ -33,7 +15,7 @@ describe('Friend Models', function() {
     this.timeout(4000);
     User.remove({}).exec()
     .then(function(){
-      var users = [new User(testUser), new User(friend), new User(loser)];
+      var users = [new User(testUsers[0]), new User(testUsers[1]), new User(testUsers[2])];
       return User.create(users);
     })
     .then(function(users){
@@ -41,7 +23,7 @@ describe('Friend Models', function() {
       friendId = users[1]._id;
       loserId = users[2]._id;
       done();
-    })
+    });
   });
 
   describe('add Friend', function() {
@@ -51,7 +33,7 @@ describe('Friend Models', function() {
         return friendModels.addFriend(loserId, testId)
       })
       .then(function() {
-        return User.findOne({'email': 'test@test.com'}).exec()
+        return User.findOne({'email': testUsers[0].email}).exec()
       })
       .then(function(user) {
         expect(user.requests.length).to.equal(2);
@@ -64,7 +46,7 @@ describe('Friend Models', function() {
     it('should remove the request from the user', function(done) {
       friendModels.rejectFriend(testId, loserId)
       .then(function() {
-        return User.findOne({'email': 'test@test.com'}).exec()
+        return User.findOne({'email': testUsers[0].email}).exec()
       })
       .then(function(user) {
         expect(user.requests.length).to.equal(1);
@@ -81,21 +63,21 @@ describe('Friend Models', function() {
       })
     })
     it('should add the friend to the user', function(done){
-      User.findOne({'email': 'test@test.com'}).exec()
+      User.findOne({'email': testUsers[0].email}).exec()
       .then(function(user) {
         expect(user.friends[0]).to.eql(friendId);
         done();
       });
     });
     it('should add the user to the friend\'s friend list' , function(done){
-      User.findOne({'email': 'friend@test.com'}).exec()
+      User.findOne({'email': testUsers[1].email}).exec()
       .then(function(user) {
         expect(user.friends[0]).to.eql(testId);
         done();
       });
     });
     it('should remove the request from the user', function(done){
-      User.findOne({'email': 'test@test.com'}).exec()
+      User.findOne({'email': testUsers[0].email}).exec()
       .then(function(user) {
         expect(user.requests.length).to.equal(0);
         done();
@@ -106,13 +88,13 @@ describe('Friend Models', function() {
 
   describe('get Friends', function() {
     before(function(done){
-      User.findOneAndUpdate({'email':'test@test.com'},{$push:{friends: loserId}}).exec()
+      User.findOneAndUpdate({'email':testUsers[0].email},{$push:{friends: loserId}}).exec()
       .then(function(){
         done();
       })
     })
     after(function(done){
-      User.findOneAndUpdate({'email':'test@test.com'},{$pull:{friends: loserId}}).exec()
+      User.findOneAndUpdate({'email':testUsers[0].email},{$pull:{friends: loserId}}).exec()
       .then(function(){
         done();
       })
@@ -127,6 +109,7 @@ describe('Friend Models', function() {
     it('should grab friends where the search param is included in the user\'s email', function(done) {
       friendModels.getFriends(testId, 'lose')
       .then(function(user) {
+        console.log(user);
         expect(user.friends[0].email).to.equal('loser@test.com');
         done();
       });
@@ -134,7 +117,7 @@ describe('Friend Models', function() {
     it('should grab friends where the search param is included in the user\'s name', function(done) {
       friendModels.getFriends(testId, 'squa')
       .then(function(user) {
-        expect(user.friends[0].email).to.equal('friend@test.com');
+        expect(user.friends[0].email).to.equal(testUsers[1].email);
         done();
       });
     });
@@ -148,19 +131,19 @@ describe('Friend Models', function() {
       })
     })
     it('should remove the friend to the user', function(done){
-      User.findOne({'email': 'test@test.com'}).exec()
+      User.findOne({'email': testUsers[0].email}).exec()
       .then(function(user) {
         expect(user.friends.length).to.equal(1);
         done();
       });
     });
     it('should remove the user from the friend\'s friend list' , function(done){
-      User.findOne({'email': 'friend@test.com'}).exec()
+      User.findOne({'email': testUsers[1].email}).exec()
       .then(function(user) {
         expect(user.friends.length).to.equal(0);
         done();
       });
     });
   });
-  
+
 });

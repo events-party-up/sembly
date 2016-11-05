@@ -1,9 +1,9 @@
-// eventModels.js
 var chai = require('chai');
 var expect = chai.expect;
 var eventModels = require('../server/models/eventModels');
 var User = require('../server/schemas/userSchema');
 var Event = require('../server/schemas/eventsSchema');
+const testUser = require('./testHelpers').generateTestUsers(1)[0];
 
 var testEvent = {
 	name:'Basketball',
@@ -11,12 +11,6 @@ var testEvent = {
 	tags:['fun', 'sports'],
 }
 
-var testUser = {
-  firstName: 'Test',
-  lastName: 'User',
-  email: 'test@test.com',
-  password: 'password'
-}
 var userId;
 var eventId;
 
@@ -71,7 +65,7 @@ describe('Event Models', function() {
       });
     });
     it('should add the invite to the users event', function(done) {
-      User.findOne({'email': 'test@test.com'}).exec()
+      User.findOne({'email': testUser.email}).exec()
       .then(function(user){
       	expect(user.invitedTo.length).to.equal(1);
         done();
@@ -84,10 +78,10 @@ describe('Event Models', function() {
       eventModels.saveEvent(eventId, userId)
       .then(function(){
       	done();
-      })	
+      })
   	})
     it('should save the event to the User', function(done){
-      User.findOne({'email': 'test@test.com'}).exec()
+      User.findOne({'email': testUser.email}).exec()
       .then(function(user) {
         expect(user.saved.length).to.equal(1);
         done();
@@ -116,14 +110,14 @@ describe('Event Models', function() {
   });
 
 //-------This section requires eventModels.addEvent to be working--------
-  
+
   describe('get events', function() {
     before(function(done){
       this.timeout(7000);
       eventModels.addEvent(events[0])
       .then(function(){
         events[1].invitedUsers = [userId];
-        eventModels.addEvent(events[1]) 
+        eventModels.addEvent(events[1])
       })
       .then(function(){
         eventModels.addEvent(events[2])
@@ -170,7 +164,7 @@ describe('Event Models', function() {
     });
     it('should return a single array with no repeats', function() {
       expect(bundle.length).to.equal(3);
-    });  
+    });
   });
 
   describe('get Invited', function() {
@@ -235,11 +229,11 @@ describe('Event Models', function() {
       .catch(function(error) {
         done();
       });
-    });   
+    });
     it('should remove the event from the users saved events', function(done) {
         this.timeout(10000);
         setTimeout(function(){
-          User.findOne({'email': 'test@test.com'}).exec()
+          User.findOne({'email': testUser.email}).exec()
           .then(function(user) {
             expect(user.saved.length).to.equal(0);
             done();
@@ -248,7 +242,7 @@ describe('Event Models', function() {
     });
     it('should remove the event from the users invited events', function(done) {
       this.timeout(10000);
-      User.findOne({'email': 'test@test.com'}).exec()
+      User.findOne({'email': testUser.email}).exec()
       .then(function(user) {
         expect(user.invitedTo.length).to.equal(1);
         done();
@@ -256,7 +250,7 @@ describe('Event Models', function() {
     });
   });
 
-  
+
 
 
 });
