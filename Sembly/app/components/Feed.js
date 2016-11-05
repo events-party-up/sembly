@@ -43,7 +43,7 @@ export default class Feed extends Component {
     fetch('http://localhost:3000/api/events/invited', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: this.props.user.facebookId }),
+      body: JSON.stringify({ facebookId: this.props.user.facebookId }),
     })
     .then(response => response.json())
     .then(events => this.setState({ events, loading: false }))
@@ -53,7 +53,7 @@ export default class Feed extends Component {
     fetch('http://localhost:3000/api/events/saved', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: this.props.user.facebookId }),
+      body: JSON.stringify({ facebookId: this.props.user.facebookId }),
     })
     .then(response => {
       return response.json();
@@ -69,7 +69,7 @@ export default class Feed extends Component {
     fetch('http://localhost:3000/api/events/bundle', {
       method: 'POST',
       headers: { 'Content-Type' : 'application/json' },
-      body: JSON.stringify({ userId: this.props.user.facebookId, location: this.props.mongoLocation })
+      body: JSON.stringify({ facebookId: this.props.user.facebookId, location: this.props.mongoLocation })
     })
     .then(response => response.json())
     .then(events => this.setState({ events, loading: false }))
